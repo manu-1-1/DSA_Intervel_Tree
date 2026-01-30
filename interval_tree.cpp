@@ -41,6 +41,20 @@ private:
         preorder(node->right);
     }
 
+    Node* isOverlapping(Node* node,int l,int h){
+        if(node==NULL){
+            return NULL;
+        }
+        if(node->i.low<=h && node->i.high>=l){
+            return node;
+        }
+        if(node->left!=NULL && node->left->max>=l){
+            return isOverlapping(node->left,l,h);
+        }
+
+        return isOverlapping(node->right,l,h);
+    }
+
 public:
     IntervalTree(int l,int h){
         root=createNode(l,h);
@@ -63,6 +77,15 @@ public:
     void preorder(){
         preorder(root);
     }
+
+    void searchOverlap(int l,int h){
+        Node *res=isOverlapping(root,l,h);
+        if(res!=NULL){
+            cout<<"Overlaps with ["<<res->i.low<<" , "<<res->i.high<<"]"<<endl;
+        }else{
+            cout<<"No overlapping interval found"<<endl;
+        }
+    }
 };
 
 int main(){
@@ -72,4 +95,6 @@ int main(){
     it.insert(5,20);
     it.insert(12,15);
     it.preorder();
+    cout<<endl;
+    it.searchOverlap(14,16);
 }
